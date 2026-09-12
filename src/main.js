@@ -5,6 +5,7 @@ const fs = require('node:fs');
 const path = require('node:path');
 const { defaults, validateSettings, nextInput } = require('./settings');
 const { createMonitor } = require('./monitor');
+const { switchWithAudio } = require('./switch-audio');
 const { writeSettings } = require('./storage');
 
 let window, tray, settings, monitor, settingsFile;
@@ -57,10 +58,10 @@ async function switchTo(target = 'toggle') {
     }
     // macOS cannot read the input with m1ddc. Toggle always requests the other computer.
     const input = target === 'windows' ? settings.windowsInput : target === 'mac' ? settings.macInput : nextInput(current, settings, process.platform);
-    await monitor.set(settings, input);
+    const audioResult = await switchWithAudio(monitor, settings, input);
     lastRequest = input;
     const computer = input === settings.windowsInput ? 'Windows' : 'MacBook';
-    publish('Switch to ' + computer + ' sent. The monitor may take a few seconds.');
+    publish('Switch to ' + computer + ' sent. ' + (audioResult.audioRestored ? 'Volume 80 and unmute commands completed.' : 'Audio could not be restored: the monitor may be unreachable from this input.')); 
     for (const display of displays) display.current = null;
   } catch (error) { report(error); throw new Error(errorMessage(error)); }
   finally { busy = false; publish(); }

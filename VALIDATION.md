@@ -30,3 +30,7 @@ The Windows download is available; the Mac binary is pending the local Mac build
 The user confirmed that switching to the Mac works with Mac input code 16 (matching KeyZinger), and subsequently confirmed the Mac picture works correctly on the Full HD monitor. This supersedes the earlier pending Windows-to-Mac picture check. Windows remains code 15. The updated suite has eight passing tests, including code-16 selection; a simulated UI test verifies Mac sends 16 and toggle returns 15.
 
 This confirms the Windows app controlling the shared monitor, not installation or execution of the Mac app. The Mac binary build and Mac-side DDC control are still pending. Configure ViewSonic at 1920 x 1080 in macOS Displays if needed.
+
+## Audio restoration verification
+
+Twelve unit tests passed including restore ordering, retry on disconnect, bounded failure, and no audio write after a failed input switch. Actual hardware test through the new switchWithAudio path: Mac code 16 returned audioRestored true, Windows code 15 returned audioRestored true; final readback input 15, volume 80, mute 2 (unmuted). The UI regression runner stalled at Electron startup on this run; no UI pass is claimed for this update. Mac audio restoration is implemented but not hardware-tested.

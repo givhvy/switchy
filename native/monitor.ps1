@@ -1,5 +1,5 @@
 param(
-    [ValidateSet('list','set')][string]$Action = 'list',
+    [ValidateSet('list','set','audio')][string]$Action = 'list',
     [string]$MonitorId = '',
     [ValidateRange(1,255)][int]$InputCode = 15
 )
@@ -41,10 +41,10 @@ public static class SwitchyDDC {
                 try {
                     for (int i=0;i<count;i++) {
                         string id=info.device+":"+i;
-                        if (action=="set") {
+                        if (action=="set" || action=="audio") {
                             if(id!=selected) continue;
                             found=true;
-                            if(!SetVCPFeature(monitors[i].handle,0x60,input)) throw new Exception("Monitor rejected the input command (Windows error "+Marshal.GetLastWin32Error()+"). Enable DDC/CI in the monitor menu and check the cable.");
+                            if(action=="audio") { uint type,volume,max,mute; if(!SetVCPFeature(monitors[i].handle,0x62,80) || !SetVCPFeature(monitors[i].handle,0x8D,2)) throw new Exception("Monitor audio restore was rejected."); System.Threading.Thread.Sleep(200); if(!GetVCPFeatureAndVCPFeatureReply(monitors[i].handle,0x62,out type,out volume,out max) || !GetVCPFeatureAndVCPFeatureReply(monitors[i].handle,0x8D,out type,out mute,out max) || volume!=80 || mute!=2) throw new Exception("Monitor audio restore could not be verified."); } else if(!SetVCPFeature(monitors[i].handle,0x60,input)) throw new Exception("Monitor rejected the input command (Windows error "+Marshal.GetLastWin32Error()+"). Enable DDC/CI in the monitor menu and check the cable.");
                         } else {
                             uint type,current,max;
                             bool ok=GetVCPFeatureAndVCPFeatureReply(monitors[i].handle,0x60,out type,out current,out max);
@@ -64,7 +64,7 @@ public static class SwitchyDDC {
         };
         if(!EnumDisplayMonitors(IntPtr.Zero,IntPtr.Zero,callback,IntPtr.Zero) && failure==null) throw new Exception("Could not enumerate displays.");
         if(failure!=null) throw failure;
-        if(action=="set" && !found) throw new Exception("Selected monitor is no longer connected. Refresh the monitor list.");
+        if(action!="list" && !found) throw new Exception("Selected monitor is no longer connected. Refresh the monitor list.");
         return result;
     }
 }

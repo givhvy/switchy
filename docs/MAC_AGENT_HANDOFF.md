@@ -88,3 +88,7 @@ When configuring the user's Mac, choose **HDMI 1 (KeyZinger / code 16)** for Mac
 ## Confirmed working setup
 
 The user confirmed that the Windows app now switches to the Mac picture using Mac input 16, and that the Full HD picture works. For installation on the Mac, explicitly save **HDMI 1 (KeyZinger / code 16)**; keep Windows at 15. If the image is incorrectly scaled, select ViewSonic in macOS Displays and configure 1920 x 1080; use Extended display or optimize mirroring for ViewSonic. Mac-side app installation and control remain to be verified.
+
+## Automatic audio restore update
+
+After each switch, restore monitor hardware volume to 80 and unmute. This is requested behavior, including when the monitor was previously muted. The Mac implementation sends m1ddc `set volume 80` then `set mute off`, with bounded retries. Confirm this on Mac hardware; only the Windows control path has been physically tested.

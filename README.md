@@ -84,3 +84,7 @@ GitHub Actions builds both platforms and publishes downloads for `v*` tags once 
 The user's working KeyZinger script sends VCP 0x60 with value **16** for Mac HDMI 1 and **15** for Windows DisplayPort. Switchy supports the same values: select **HDMI 1 (KeyZinger / code 16)** for Mac in Connection & shortcuts and save. Apply this on both computers for this desk. Existing settings are preserved; other monitors retain the standard HDMI 1 default of 17.
 
 Code 16 normally means DisplayPort 2 in the standard mapping. This option follows the user's working script, not the monitor's advertised capabilities. Those capabilities reported 15/17/18 but did not lead to a working HDMI switch. Visual confirmation with Switchy is still required.
+
+## Automatic monitor audio restoration
+
+After every Switchy input change, the app requests hardware volume 80 and unmute. It waits for reconnect and retries up to three times. Windows reads back volume and mute to verify restoration; Mac sends m1ddc volume/unmute commands (Mac hardware testing remains pending). If the monitor is unreachable, Switchy reports audio restoration failure separately from the input command. This intentionally overrides a manually muted or quieter monitor on each switch, as requested by the user. It does not alter OS mixer volume.

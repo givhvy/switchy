@@ -29,6 +29,15 @@ function createMonitor(nativeDirectory, platform = process.platform) {
       }
       throw new Error('Switchy supports Windows and Apple silicon macOS.');
     },
+    async restoreAudio(settings) {
+      if (platform === 'win32') return windows(['-Action', 'audio', '-MonitorId', settings.monitorId]);
+      if (platform === 'darwin') {
+        await mac(['display', settings.macDisplay, 'set', 'volume', '80']);
+        await mac(['display', settings.macDisplay, 'set', 'mute', 'off']);
+        return;
+      }
+      throw new Error('Unsupported platform.');
+    },
     async set(settings, input) {
       if (platform === 'win32') {
         if (!settings.monitorId) throw new Error('Choose a monitor in Connection settings first.');
