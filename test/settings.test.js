@@ -26,3 +26,11 @@ test('settings whitelist discards unknown properties and validates helper argume
   for (const macDisplay of ['1; rm -rf','../file','--help','']) assert.throws(()=>validateSettings({...defaults,macDisplay}));
   assert.throws(()=>validateSettings({...defaults,launchAtLogin:'yes'}));
 });
+
+test('KeyZinger HDMI mapping persists and toggles between codes 15 and 16', () => {
+  const settings=validateSettings({...defaults,macInput:16});
+  assert.equal(settings.macInput,16);
+  assert.equal(nextInput(15,settings,'win32'),16);
+  assert.equal(nextInput(16,settings,'win32'),15);
+  assert.equal(nextInput(null,settings,'darwin'),15);
+});

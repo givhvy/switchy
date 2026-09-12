@@ -25,3 +25,7 @@ The intended result is an installed, running Mac app and real Mac DMG/ZIP downlo
 Default toggle: Control+Alt+Shift+S (Control+Option+Shift+S on Mac). Direct Windows request: Control+Alt+Shift+W. Closing the window leaves it in the tray/menu bar. A successful native command is not visual confirmation of the other computer's picture.
 
 Deskflow is a separate optional install: Windows server, Mac client. Switchy does not forward input events or automatically move Deskflow focus. Keep this limitation clear. Inactive monitor inputs may reject DDC commands; the monitor's physical input selector remains a recovery method.
+
+## Updated input mapping from KeyZinger
+
+For this user's desk, the working KeyZinger script sends Mac HDMI 1 = **16**, Windows DisplayPort = **15**. The earlier standard-code guidance (Mac 17) did not work. Configure Mac input as **HDMI 1 (KeyZinger / code 16)** on both apps. Preserve standard defaults for unrelated monitors; do not infer that code 16 universally means HDMI. Confirm the Mac picture with the user after switching.

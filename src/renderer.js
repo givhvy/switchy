@@ -1,6 +1,6 @@
 'use strict';
 const $ = id => document.getElementById(id);
-const names = new Map([[15,'DisplayPort 1'],[16,'DisplayPort 2'],[17,'HDMI 1'],[18,'HDMI 2'],[27,'USB-C']]);
+const names = new Map([[15,'DisplayPort 1'],[16,'HDMI 1 (KeyZinger / code 16)'],[17,'HDMI 1 (standard / code 17)'],[18,'HDMI 2'],[27,'USB-C']]);
 let state, initialized = false, dirty = false;
 const portName = input => names.get(input) || 'Input ' + input;
 function options(select, value) {

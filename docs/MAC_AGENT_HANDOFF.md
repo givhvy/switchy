@@ -80,3 +80,7 @@ If GitHub authentication is unavailable on Mac, leave the finished artifacts in 
 ## 5. Optional keyboard/mouse sharing
 
 The physical keyboard and mouse remain on Windows. Deskflow must be installed separately on both computers, with Windows as server and Mac as client. Confirm network pairing and fingerprint, and guide the user through macOS permissions. Monitor input selection and Deskflow focus are separate in this version. Do not claim automatic handoff or a built-in forwarding engine.
+
+## Correction: this desk uses the KeyZinger mapping
+
+When configuring the user's Mac, choose **HDMI 1 (KeyZinger / code 16)** for Mac and DisplayPort 1 (15) for Windows. The user's working KeyZinger script uses these codes; the earlier instruction to use 17 did not work for this desk. The standard default remains 17 for other monitors, so explicitly save 16 on the Mac. Verify the actual picture after switching.

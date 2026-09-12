@@ -78,3 +78,9 @@ Requires Node.js 22+. `npm ci`, `npm test`, `npm start`. Build Windows with `npm
 The renderer has sandboxing, context isolation, no Node access, a restrictive CSP and a small IPC bridge. No network listener, analytics or credential storage is included. See [VALIDATION.md](VALIDATION.md) for completed checks and outstanding hardware tests.
 
 GitHub Actions builds both platforms and publishes downloads for `v*` tags once the account billing lock is resolved.
+
+## KeyZinger-compatible input mapping
+
+The user's working KeyZinger script sends VCP 0x60 with value **16** for Mac HDMI 1 and **15** for Windows DisplayPort. Switchy supports the same values: select **HDMI 1 (KeyZinger / code 16)** for Mac in Connection & shortcuts and save. Apply this on both computers for this desk. Existing settings are preserved; other monitors retain the standard HDMI 1 default of 17.
+
+Code 16 normally means DisplayPort 2 in the standard mapping. This option follows the user's working script, not the monitor's advertised capabilities. Those capabilities reported 15/17/18 but did not lead to a working HDMI switch. Visual confirmation with Switchy is still required.
