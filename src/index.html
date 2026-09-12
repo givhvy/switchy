@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data:; connect-src 'none'; object-src 'none'; base-uri 'none'; form-action 'none'">
+  <title>Switchy</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <main>
+    <header><span class="wordmark">switchy<span class="period">.</span></span><span id="platform">Your desk, connected</span></header>
+    <section class="switch-panel" aria-labelledby="heading">
+      <p class="eyebrow">One monitor. Two computers.</p>
+      <h1 id="heading">Change your view.</h1>
+      <div class="computers">
+        <button id="windows" class="computer" aria-label="Switch monitor to Windows"><span class="device-icon desktop" aria-hidden="true"></span><strong>Windows PC</strong><span id="windows-port">DisplayPort 1</span></button>
+        <span class="connector" aria-hidden="true">↔</span>
+        <button id="mac" class="computer" aria-label="Switch monitor to MacBook"><span class="device-icon laptop" aria-hidden="true"></span><strong>MacBook</strong><span id="mac-port">HDMI 1</span></button>
+      </div>
+      <button id="toggle" class="primary">Switch computer <span aria-hidden="true">↔</span></button>
+      <p class="shortcut">Or press <kbd id="shortcut-label">Ctrl + Alt + Shift + S</kbd></p>
+    </section>
+    <div class="connection"><p id="status" role="status" aria-live="polite">Looking for your monitor…</p><button id="refresh" class="text-button">Refresh</button></div>
+    <details id="settings-panel">
+      <summary>Connection & shortcuts</summary>
+      <form id="settings-form">
+        <label id="monitor-field">Shared monitor<select id="monitorId"><option value="">Choose a monitor</option></select></label>
+        <label id="mac-display-field" hidden>Mac display number or UUID<input id="macDisplay" value="1" maxlength="180"><small>Use the display list below to identify your external monitor.</small></label>
+        <div class="form-row"><label>Windows input<select id="windowsInput"></select></label><label>MacBook input<select id="macInput"></select></label></div>
+        <p class="hint">Enable DDC/CI in your monitor’s menu. If the Mac is plugged into HDMI 2, choose HDMI 2 here.</p>
+        <label>Toggle shortcut<input id="shortcut" value="Control+Alt+Shift+S" maxlength="80" spellcheck="false"></label>
+        <label>Switch to Windows shortcut<input id="restoreShortcut" value="Control+Alt+Shift+W" maxlength="80" spellcheck="false"></label>
+        <p class="hint">On Mac, Control + Alt means Control + Option. Use a modifier and a letter or number.</p>
+        <label class="checkbox"><input id="launchAtLogin" type="checkbox">Open Switchy when I sign in</label>
+        <button id="save" type="submit" class="secondary">Save settings</button>
+        <p id="save-status" role="status"></p>
+      </form>
+      <details class="diagnostics"><summary>Monitor details</summary><pre id="diagnostics">No monitor data yet.</pre></details>
+    </details>
+    <details id="sharing-panel">
+      <summary>Share your keyboard & mouse</summary>
+      <div class="help">
+        <p>Keep them plugged into Windows. Deskflow can send your keyboard and mouse to the Mac over your local network.</p>
+        <ol><li>Install Deskflow on both computers and keep both awake on the same network.</li><li>In Deskflow, make Windows the server (share this computer’s keyboard and mouse) and the Mac the client.</li><li>Connect the Mac to the Windows address. Verify the server fingerprint, and allow macOS Accessibility and Input Monitoring when requested.</li><li>In the Windows server layout, place the Mac to the right. After switching the monitor, move your pointer past the right edge to control the Mac. Move left to return.</li></ol>
+        <p>Screen input and keyboard focus are separate. Switchy changes the monitor input; Deskflow changes which computer receives your input. Switchy does not bundle or automatically configure Deskflow.</p>
+        <button id="deskflow" class="secondary">Download Deskflow</button>
+      </div>
+    </details>
+    <details>
+      <summary>If the monitor doesn’t switch</summary>
+      <div class="help"><p>Check the selected monitor and HDMI port, turn on DDC/CI in the monitor’s own menu, and connect both computers directly if possible.</p><p>Some monitors ignore commands from an inactive port. If switching back fails, use Switchy on the computer currently displayed, or the monitor’s physical input button. A cable or adapter can also block DDC.</p><p>The Apple silicon download includes m1ddc. Mac HDMI support depends on the port and monitor; a USB-C to DisplayPort cable is an alternative if HDMI control fails.</p><button id="mac-help" class="text-button">Mac compatibility notes</button></div>
+    </details>
+    <footer><span id="version">Switchy</span><span>Closing keeps Switchy in the tray.</span><button id="releases" class="text-button">Downloads</button></footer>
+  </main>
+  <script src="renderer.js"></script>
+</body>
+</html>

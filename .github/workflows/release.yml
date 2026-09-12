@@ -1,0 +1,81 @@
+name: Build Switchy
+on:
+  push:
+    branches: [main]
+    tags: ['v*']
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: windows-latest
+            script: dist:win
+            artifact: windows
+          - os: macos-14
+            script: dist:mac
+            artifact: macos-apple-silicon
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - run: npm test
+      - name: Build pinned Apple silicon monitor helper
+        if: runner.os == 'macOS'
+        shell: bash
+        run: |
+          git clone https://github.com/waydabber/m1ddc.git "$RUNNER_TEMP/m1ddc"
+          git -C "$RUNNER_TEMP/m1ddc" checkout 04d949794102eb8df01ad3681afff6464a3eede2
+          make -C "$RUNNER_TEMP/m1ddc"
+          cp "$RUNNER_TEMP/m1ddc/m1ddc" native/m1ddc
+          cp "$RUNNER_TEMP/m1ddc/LICENSE" native/m1ddc-LICENSE
+          chmod +x native/m1ddc
+          file native/m1ddc
+          codesign --force --sign - native/m1ddc
+      - run: npm run ${{ matrix.script }}
+        env:
+          CSC_IDENTITY_AUTO_DISCOVERY: 'false'
+      - name: Verify bundled Mac helper
+        if: runner.os == 'macOS'
+        shell: bash
+        run: |
+          test -x dist/mac-arm64/Switchy.app/Contents/Resources/native/m1ddc
+          file dist/mac-arm64/Switchy.app/Contents/Resources/native/m1ddc | grep arm64
+          codesign --verify --deep --strict dist/mac-arm64/Switchy.app
+      - uses: actions/upload-artifact@v4
+        with:
+          name: switchy-${{ matrix.artifact }}
+          if-no-files-found: error
+          path: |
+            dist/*.exe
+            dist/*.dmg
+            dist/*.zip
+  release:
+    if: startsWith(github.ref, 'refs/tags/v')
+    needs: build
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with:
+          path: downloads
+          merge-multiple: true
+      - name: Publish downloads
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          cd downloads
+          sha256sum * > SHA256SUMS.txt
+          cd ..
+          gh release create "$GITHUB_REF_NAME" downloads/* --title "Switchy $GITHUB_REF_NAME" --notes-file RELEASE_NOTES.md
