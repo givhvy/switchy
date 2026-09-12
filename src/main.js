@@ -5,6 +5,7 @@ const fs = require('node:fs');
 const path = require('node:path');
 const { defaults, validateSettings, nextInput } = require('./settings');
 const { createMonitor } = require('./monitor');
+const { writeSettings } = require('./storage');
 
 let window, tray, settings, monitor, settingsFile;
 let displays = [], busy = false, quitting = false, lastRequest = null, status = 'Looking for your monitor…';
@@ -18,8 +19,7 @@ const links = {
 function state() { return { settings, displays, busy, lastRequest, status, platform: process.platform, version: app.getVersion() }; }
 function publish(message) { if (message) status = message; window?.webContents.send('state', state()); }
 function persist(value) {
-  fs.writeFileSync(settingsFile + '.tmp', JSON.stringify(value, null, 2));
-  fs.renameSync(settingsFile + '.tmp', settingsFile);
+  writeSettings(settingsFile, value);
 }
 function errorMessage(error) {
   if (error.killed) return 'The monitor did not respond in time. Check DDC/CI in its menu, then refresh.';

@@ -35,7 +35,7 @@ jobs:
         run: |
           git clone https://github.com/waydabber/m1ddc.git "$RUNNER_TEMP/m1ddc"
           git -C "$RUNNER_TEMP/m1ddc" checkout 04d949794102eb8df01ad3681afff6464a3eede2
-          make -C "$RUNNER_TEMP/m1ddc"
+          make -C "$RUNNER_TEMP/m1ddc" CC="clang -arch arm64"
           cp "$RUNNER_TEMP/m1ddc/m1ddc" native/m1ddc
           cp "$RUNNER_TEMP/m1ddc/LICENSE" native/m1ddc-LICENSE
           chmod +x native/m1ddc
@@ -78,4 +78,8 @@ jobs:
           cd downloads
           sha256sum * > SHA256SUMS.txt
           cd ..
-          gh release create "$GITHUB_REF_NAME" downloads/* --title "Switchy $GITHUB_REF_NAME" --notes-file RELEASE_NOTES.md
+          if gh release view "$GITHUB_REF_NAME" >/dev/null 2>&1; then
+            gh release upload "$GITHUB_REF_NAME" downloads/* --clobber
+          else
+            gh release create "$GITHUB_REF_NAME" downloads/* --title "Switchy $GITHUB_REF_NAME" --notes-file RELEASE_NOTES.md
+          fi
