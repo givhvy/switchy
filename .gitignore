@@ -5,3 +5,4 @@ dist/
 .tmp/
 native/m1ddc
 native/m1ddc-LICENSE
+dist-audio/

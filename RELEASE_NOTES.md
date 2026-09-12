@@ -27,3 +27,7 @@ DDC support depends on the monitor, cable and port. Some monitors cannot switch 
 The Windows installer now includes **HDMI 1 (KeyZinger / code 16)** in Connection & shortcuts. Select and save this for the Mac on this ViewSonic desk; keep Windows at DisplayPort 1 (15). Standard HDMI 1 code 17 did not work on this setup. The user confirmed the corrected Windows app switches to the Mac and the Full HD picture works.
 
 The Mac build remains pending. When building/installing it, also select Mac input 16 explicitly. The shared monitor's resolution is 1920 x 1080.
+
+## Automatic audio after each switch
+
+Switchy now restores the monitor's hardware volume to 80 and unmutes after each input change, retrying during reconnect. A real Windows-to-Mac-to-Windows test completed both audio restores and read back volume 80, unmuted. Mac-side implementation is included but not yet hardware-tested. If audio commands fail, the app reports that separately from the successful input switch.
