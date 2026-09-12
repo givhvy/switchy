@@ -21,3 +21,9 @@ Install Deskflow separately on Windows and Mac, with Windows as server. Switchy 
 Windows has no publisher signature and may show SmartScreen. The Mac build uses ad-hoc signing without Apple notarization and may require Privacy & Security > Open Anyway.
 
 DDC support depends on the monitor, cable and port. Some monitors cannot switch back from an inactive input. Use Switchy on the displayed computer or the monitor's physical input button. Actual M5 HDMI switching and cross-computer keyboard/mouse sharing remain to be tested.
+
+## Updated Windows build: KeyZinger input mapping
+
+The Windows installer now includes **HDMI 1 (KeyZinger / code 16)** in Connection & shortcuts. Select and save this for the Mac on this ViewSonic desk; keep Windows at DisplayPort 1 (15). Standard HDMI 1 code 17 did not work on this setup. The user confirmed the corrected Windows app switches to the Mac and the Full HD picture works.
+
+The Mac build remains pending. When building/installing it, also select Mac input 16 explicitly. The shared monitor's resolution is 1920 x 1080.

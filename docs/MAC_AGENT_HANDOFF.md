@@ -84,3 +84,7 @@ The physical keyboard and mouse remain on Windows. Deskflow must be installed se
 ## Correction: this desk uses the KeyZinger mapping
 
 When configuring the user's Mac, choose **HDMI 1 (KeyZinger / code 16)** for Mac and DisplayPort 1 (15) for Windows. The user's working KeyZinger script uses these codes; the earlier instruction to use 17 did not work for this desk. The standard default remains 17 for other monitors, so explicitly save 16 on the Mac. Verify the actual picture after switching.
+
+## Confirmed working setup
+
+The user confirmed that the Windows app now switches to the Mac picture using Mac input 16, and that the Full HD picture works. For installation on the Mac, explicitly save **HDMI 1 (KeyZinger / code 16)**; keep Windows at 15. If the image is incorrectly scaled, select ViewSonic in macOS Displays and configure 1920 x 1080; use Extended display or optimize mirroring for ViewSonic. Mac-side app installation and control remain to be verified.
