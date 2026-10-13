@@ -3,6 +3,7 @@
 const { app, BrowserWindow, ipcMain, globalShortcut, Tray, Menu, nativeImage, shell, Notification } = require('electron');
 const fs = require('node:fs');
 const path = require('node:path');
+if(process.platform==='win32'&&app.isPackaged)app.setPath('userData',path.join(app.getPath('home'),'.switchy'));
 const { defaults, validateSettings, nextInput } = require('./settings');
 const { createMonitor } = require('./monitor');
 const { switchWithAudio } = require('./switch-audio');

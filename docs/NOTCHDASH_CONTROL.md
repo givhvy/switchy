@@ -2,7 +2,7 @@
 
 Switchy 0.3.0 adds a local named-pipe endpoint for the paired NotchDash controller. It builds on the installed, physically verified 0.2.2 focus recovery and asynchronous volume restoration implementation.
 
-`%APPDATA%/switchy/control.json` contains an ephemeral endpoint and credential. It is local application data, not a pairing artifact: never upload or send it to the Mac. A new launch replaces the credential. The pipe accepts one bounded authenticated JSON request per connection:
+`%USERPROFILE%/.switchy/control.json` contains an ephemeral endpoint and credential. Packaged Windows builds use this fixed per-user directory to avoid Codex MSIX AppData virtualization; Electron test profiles remain isolated. It is local application data, not a pairing artifact: never upload or send it to the Mac. A new launch replaces the credential. The pipe accepts one bounded authenticated JSON request per connection:
 
 - `state`: monitor mapping, independently observed Deskflow focus, role and connectivity; last acknowledged monitor target or startup DDC readback. For this calibrated mapping, SET 16/readback 18 is Mac, 15 is Windows.
 - `policy`, boolean `follow`: save the focus-follow policy without changing input mapping, login behavior or shortcuts.
