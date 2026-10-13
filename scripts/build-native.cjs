@@ -1,0 +1,14 @@
+'use strict';
+const fs=require('node:fs'),path=require('node:path'),{spawnSync}=require('node:child_process');
+if(process.platform!=='win32')throw Error('Windows native helper must be compiled on Windows.');
+const root=path.join(__dirname,'..'),native=path.join(root,'native');
+const source=fs.readFileSync(path.join(native,'monitor.ps1'),'utf8');
+const code=/Add-Type -TypeDefinition @'\r?\n([\s\S]*?)\r?\n'@/.exec(source)?.[1];
+if(!code)throw Error('Native monitor source missing.');
+const temp=path.join(root,'.tmp','native-build');fs.mkdirSync(temp,{recursive:true});
+const monitor=path.join(temp,'Monitor.cs');fs.writeFileSync(monitor,code);
+const compiler=path.join(process.env.SystemRoot,'Microsoft.NET','Framework64','v4.0.30319','csc.exe');
+const result=spawnSync(compiler,['/nologo','/target:library','/platform:x64','/out:'+path.join(native,'SwitchyNative.dll'),path.join(native,'FastGuard.cs'),monitor],{stdio:'inherit',windowsHide:true});
+if(result.error)throw result.error;
+if(result.status!==0)process.exit(result.status || 1);
+console.log('Compiled Windows guard/DDC helper; no monitor command executed.');

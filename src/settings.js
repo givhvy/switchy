@@ -3,7 +3,7 @@
 const defaults = {
   monitorId: '', windowsInput: 15, macInput: 17,
   shortcut: 'Control+Alt+Shift+S', restoreShortcut: 'Control+Alt+Shift+W',
-  launchAtLogin: false, macDisplay: '1'
+  launchAtLogin: false, macDisplay: '1', followDeskflowFocus: false
 };
 
 function validateSettings(value) {
@@ -21,6 +21,7 @@ function validateSettings(value) {
   if (typeof result.monitorId !== 'string' || result.monitorId.length > 300) throw new Error('Invalid monitor.');
   if (typeof result.macDisplay !== 'string' || !/^[a-zA-Z0-9][a-zA-Z0-9:_-]{0,179}$/.test(result.macDisplay)) throw new Error('Enter a valid Mac display number or UUID.');
   if (typeof result.launchAtLogin !== 'boolean') throw new Error('Invalid startup setting.');
+  if (typeof result.followDeskflowFocus !== 'boolean') throw new Error('Invalid focus-follow setting.');
   return result;
 }
 

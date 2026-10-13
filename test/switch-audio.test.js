@@ -1,6 +1,11 @@
 const {test}=require('node:test');
 const assert=require('node:assert/strict');
 const {switchWithAudio}=require('../src/switch-audio');
+test('new focus skips audio restoration for the old input', async()=>{
+ let current=true,audio=0;
+ const result=await switchWithAudio({set:async()=>{},restoreAudio:async()=>audio++},{},15,async()=>{current=false;},()=>current);
+ assert.equal(audio,0);assert.deepEqual(result,{audioRestored:false,superseded:true});
+});
 test('every switch restores audio after the input command',async()=>{
  const calls=[]; const monitor={set:async(s,i)=>calls.push(i),restoreAudio:async()=>calls.push('audio')};
  for(const input of [16,15]) assert.deepEqual(await switchWithAudio(monitor,{},input,async()=>{}),{audioRestored:true});

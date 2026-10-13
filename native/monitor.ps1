@@ -41,10 +41,12 @@ public static class SwitchyDDC {
                 try {
                     for (int i=0;i<count;i++) {
                         string id=info.device+":"+i;
-                        if (action=="set" || action=="audio") {
+                        if (action=="set" || action=="audio" || action=="volume" || action=="unmute" || action=="verify-volume" || action=="verify-mute") {
                             if(id!=selected) continue;
                             found=true;
-                            if(action=="audio") { uint type,volume,max,mute; if(!SetVCPFeature(monitors[i].handle,0x62,80) || !SetVCPFeature(monitors[i].handle,0x8D,2)) throw new Exception("Monitor audio restore was rejected."); System.Threading.Thread.Sleep(200); if(!GetVCPFeatureAndVCPFeatureReply(monitors[i].handle,0x62,out type,out volume,out max) || !GetVCPFeatureAndVCPFeatureReply(monitors[i].handle,0x8D,out type,out mute,out max) || volume!=80 || mute!=2) throw new Exception("Monitor audio restore could not be verified."); } else if(!SetVCPFeature(monitors[i].handle,0x60,input)) throw new Exception("Monitor rejected the input command (Windows error "+Marshal.GetLastWin32Error()+"). Enable DDC/CI in the monitor menu and check the cable.");
+                            if(action=="volume" || action=="unmute") { if(!SetVCPFeature(monitors[i].handle,action=="volume"?(byte)0x62:(byte)0x8D,action=="volume"?80U:2U))throw new Exception("Monitor audio restore was rejected."); }
+                            else if(action=="verify-volume" || action=="verify-mute") { uint type,value,max; if(!GetVCPFeatureAndVCPFeatureReply(monitors[i].handle,action=="verify-volume"?(byte)0x62:(byte)0x8D,out type,out value,out max) || value!=(action=="verify-volume"?80U:2U))throw new Exception("Monitor audio restore could not be verified."); }
+                            else if(action=="audio") { uint type,volume,max,mute; if(!SetVCPFeature(monitors[i].handle,0x62,80) || !SetVCPFeature(monitors[i].handle,0x8D,2)) throw new Exception("Monitor audio restore was rejected."); System.Threading.Thread.Sleep(200); if(!GetVCPFeatureAndVCPFeatureReply(monitors[i].handle,0x62,out type,out volume,out max) || !GetVCPFeatureAndVCPFeatureReply(monitors[i].handle,0x8D,out type,out mute,out max) || volume!=80 || mute!=2) throw new Exception("Monitor audio restore could not be verified."); } else if(!SetVCPFeature(monitors[i].handle,0x60,input)) throw new Exception("Monitor rejected the input command (Windows error "+Marshal.GetLastWin32Error()+"). Enable DDC/CI in the monitor menu and check the cable.");
                         } else {
                             uint type,current,max;
                             bool ok=GetVCPFeatureAndVCPFeatureReply(monitors[i].handle,0x60,out type,out current,out max);

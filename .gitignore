@@ -5,4 +5,5 @@ dist/
 .tmp/
 native/m1ddc
 native/m1ddc-LICENSE
+native/SwitchyNative.dll
 dist-audio/
