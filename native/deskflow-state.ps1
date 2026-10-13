@@ -1,4 +1,9 @@
 $ErrorActionPreference='Stop'
+function Get-CoreStartTime([uint32]$ProcessId) {
+    $process=Get-CimInstance -ClassName Win32_Process -Filter "ProcessId=$ProcessId" -ErrorAction Stop
+    if(!$process -or $process.CreationDate -isnot [datetime]){throw 'The authenticated core creation time could not be verified.'}
+    return $process.CreationDate
+}
 try {
     $runtime='C:\ProgramData\Deskflow\Deskflow.conf'
     $text=[IO.File]::ReadAllText($runtime)
@@ -30,7 +35,7 @@ try {
         try {$tail=$reader.ReadToEnd()} finally {$reader.Dispose()}
     } finally {$stream.Dispose()}
     if($isServer) {
-        $start=(Get-Process -Id $cores[0].ProcessId -ErrorAction Stop).StartTime
+        $start=Get-CoreStartTime $cores[0].ProcessId
         $tail=(@($tail -split '\r?\n'|Where-Object {$_ -match '^\[([^\]]+)\]' -and [datetime]::Parse($Matches[1]) -ge $start.AddSeconds(-1)}) -join "`n")
         if($tail -notmatch 'INFO: accepted secure socket'){$connected=$false}
         $tail=[regex]::Replace($tail,'(?m)^(\[[^\]]+\] )INFO: switch from "(?:DESKTOP-S9B3N7M|NotchDash-Mac)" to "(DESKTOP-S9B3N7M|NotchDash-Mac)" at -?\d+,-?\d+\r?$',{
