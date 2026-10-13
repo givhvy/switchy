@@ -226,9 +226,13 @@ else {
         if(request.action==='state') {
           const local=await monitor.deskflowState();
           const focus=parseDeskflowState(local.events||'');
+          const tlsEvents=[...(local.events||'').matchAll(/\[([^\]]+)\] INFO: connected to secure socket/g)];
+          const focusEvents=[...(local.events||'').matchAll(/\[([^\]]+)\] INFO: (?:entering computer|leaving computer)/g)];
+          const connectionEpoch=tlsEvents.length?String(local.processId)+':'+tlsEvents.at(-1)[1]:null;
+          const inputFocusEventAt=focusEvents.at(-1)?.[1]||null;
           const readback=displays.find(d=>d.id===settings.monitorId)?.current;
           const readTarget=readback===settings.windowsInput?'windows':readback===settings.macInput||(settings.windowsInput===15&&settings.macInput===16&&readback===18)?'mac':null;
-          return {version:app.getVersion(),monitorId:settings.monitorId,windowsInput:settings.windowsInput,macInput:settings.macInput,follow:settings.followDeskflowFocus,connected:local.connected===true,inputFocus:local.connected&&focus.connected?focus.target:null,displayTarget:lastRequest===settings.windowsInput?'windows':lastRequest===settings.macInput?'mac':readTarget,displayEvidence:lastRequest===null?(readTarget?'readback':'unknown'):'command-acknowledged',role:local.role||'client',error:local.error||null};
+          return {version:app.getVersion(),monitorId:settings.monitorId,windowsInput:settings.windowsInput,macInput:settings.macInput,follow:settings.followDeskflowFocus,connected:local.connected===true&&focus.connected,inputFocus:local.connected&&focus.connected?focus.target:null,connectionEpoch,inputFocusEventAt,displayTarget:lastRequest===settings.windowsInput?'windows':lastRequest===settings.macInput?'mac':readTarget,displayEvidence:lastRequest===null?(readTarget?'readback':'unknown'):'command-acknowledged',role:local.role||'client',error:local.error||null};
         }
         focusQueue.cancel();audioRestorer.cancel();
         const deadline=Date.now()+25000;
